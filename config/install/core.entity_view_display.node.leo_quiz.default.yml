@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.leo_quiz.field_quiz
+    - node.type.leo_quiz
+  module:
+    - entity_reference_revisions
+    - user
+id: node.leo_quiz.default
+targetEntityType: node
+bundle: leo_quiz
+mode: default
+content:
+  field_quiz:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    region: content
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

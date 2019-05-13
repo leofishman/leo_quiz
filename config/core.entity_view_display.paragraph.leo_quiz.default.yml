@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.leo_quiz.field_answer
+    - field.field.paragraph.leo_quiz.field_option
+    - field.field.paragraph.leo_quiz.field_question
+    - paragraphs.paragraphs_type.leo_quiz
+id: paragraph.leo_quiz.default
+targetEntityType: paragraph
+bundle: leo_quiz
+mode: default
+content:
+  field_answer:
+    type: string
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_option:
+    type: string
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_question:
+    type: string
+    weight: 0
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden: {  }

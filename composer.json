@@ -1,0 +1,14 @@
+{
+  "name": "drupal/leo_quiz",
+  "type": "drupal-module",
+  "description": "Basic quiz system",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/leo_quiz",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/leo_quiz",
+    "source": "http://cgit.drupalcode.org/leo_quiz"
+  },
+  "require": { }
+}

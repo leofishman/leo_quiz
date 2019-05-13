@@ -1,0 +1,13 @@
+langcode: es
+status: true
+dependencies:
+  enforced:
+    module:
+      - leo_quiz
+name: 'Quiz API'
+type: leo_quiz
+description: 'Content type that can be used to add <em>quiz</em> page to be consumed bay a json client.'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

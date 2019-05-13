@@ -1,0 +1,9 @@
+
+leo_quiz.quiz_controller_quiz:
+  path: '/api/quiz?quiz={nid}'
+  defaults:
+    _controller: '\Drupal\leo_quiz\Controller\quizController::quiz'
+    _title: 'myQuiz'
+  requirements:
+    _permission: 'access content'
+    

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains leo_quiz.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function leo_quiz_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the leo_quiz module.
+    case 'help.page.leo_quiz':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Basic quiz system, create a quiz content type ready to set questions and 4 answers, one correct as an api') . '</p>';
+      return $output;
+
+    default:
+  }
+}

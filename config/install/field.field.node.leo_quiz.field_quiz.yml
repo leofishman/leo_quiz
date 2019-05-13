@@ -1,0 +1,30 @@
+langcode: es
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_quiz
+    - node.type.leo_quiz
+    - paragraphs.paragraphs_type.leo_quiz
+  module:
+    - entity_reference_revisions
+id: node.leo_quiz.field_quiz
+field_name: field_quiz
+entity_type: node
+bundle: leo_quiz
+label: quiz
+description: 'Paragraph with the set of question, answer and 3 wrong answers options'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      leo_quiz: leo_quiz
+    target_bundles_drag_drop:
+      leo_quiz:
+        enabled: true
+        weight: 2
+field_type: entity_reference_revisions

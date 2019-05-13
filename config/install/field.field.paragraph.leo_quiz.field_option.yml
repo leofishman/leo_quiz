@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_option
+    - paragraphs.paragraphs_type.leo_quiz
+id: paragraph.quiz.field_option
+field_name: field_option
+entity_type: paragraph
+bundle: leo_quiz
+label: Option
+description: 'Answers not valid for the api quiz by leo'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

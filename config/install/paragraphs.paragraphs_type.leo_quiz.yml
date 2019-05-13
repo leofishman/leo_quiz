@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: leo_quiz
+label: quiz
+icon_uuid: null
+description: 'set of question and answers to be included in quiz content type'
+behavior_plugins: {  }

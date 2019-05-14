@@ -48,31 +48,56 @@ class quizController extends ControllerBase {
    *   Return Hello string.
    */
   public function quiz() {
+    $response_array = [];
+
     $nid =\Drupal::request()->query->get('quiz') ?: 'default';
     
     is_numeric($nid)?$nid:0;
     $node = Node::load($nid);
     $title = $node->title->value;
-    $type = $node->getType();
-    $status = $node->status->value;
-    if (($type == 'leo_quiz') && ($status == 1)) {
-        $quiz = $node->get('field_quiz')->referencedEntities();
-        // Encode node as json 
-        $node_encoded = $this->serializer->serialize($node, 'json', ['plugin_id' => 'entity']);
-        $quiz_encoded = $this->serializer->serialize($quiz, 'json', ['plugin_id' => 'entity']);
-        
-        // Build response with node serialized
-        $response = new JsonResponse([
-          'quiz' => $quiz_encoded,
-          'node' => $node_encoded,
-        ]);
-    
-    return $response;     
-    } else {
-      return ;
-    }
+    if ($title){
 
     
+      $type = $node->getType();
+      $status = $node->status->value;
+      $response_array = ['Title', $node->getTitle()];
+      $answers = [];
+
+      if (($type == 'leo_quiz') && ($status == 1)) {
+        foreach ($node->get('field_quiz') as $para) {
+          if ($para->entity->getType() == 'leo_quiz') {   // e.g., "main_content" or "social_media"
+            $quiz = $para->entity;   
+            $question = ['question',$quiz->field_question->value];
+            $answer = $quiz->field_answer->value;
+            array_push($answers, $answer);
+            $options = $quiz->field_option->getValue();
+            for ($i = 0;$i < 3 ;$i++) {
+              $option = array_values($options[$i]);
+              array_push($answers, $option[0]);
+            }
+            shuffle($answers);
+            array_push($response_array,[$question,$answers]);
+          }
+        }
+
+          $quiz_encoded = $this->serializer->serialize($response_array, 'json', ['plugin_id' => 'entity']);
+          
+          // Build response with node serialized
+          $response = new JsonResponse([
+            'quiz' => $response_array,
+          //  'node' => $node_encoded,
+          ]);
+      
+    //  return $response;     
+      } else {
+      
+      }
+    }  
+      $response = new JsonResponse([
+        'quiz' => $response_array,
+      //  'node' => $node_encoded,
+      ]);
+     return $response;
   }
 
 }

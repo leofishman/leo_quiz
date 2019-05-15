@@ -1,0 +1,6 @@
+leo_quiz_load_block_quiz:
+  vesion: 1.x
+  js:
+    assets/js/load_block_quiz.js: {}
+  dependencies:
+    - core/jquery 

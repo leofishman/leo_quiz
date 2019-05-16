@@ -15,13 +15,13 @@
             let option_choosen = $('input[name=quiz_answer]:checked').val();
             let nid  = $(".load_block_quiz").find("span").attr("id");
             let url = '/api/quiz?quiz=' + nid;
-
+            
             $.post(url, {answer: option_choosen}, function (data, status) {
               console.log(data);
               if (data) {
                 $('.quiz_block').empty();
+                $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
                 $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
-                $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'"'> + data.quiz.message + '</div>');
                 $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
       
                 for (i = 0; i < 4; i++) {
@@ -47,7 +47,8 @@
         let url = '/api/quiz?quiz=' + nid;
 
         $.get(url, [], function (data, status) {
-          $('.quiz_block').empty();
+          $('.quiz_block').empty();console.log(data, data.quiz, data.quiz.status, data.quiz.message);
+          $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
           $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
           $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
 

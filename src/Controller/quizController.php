@@ -63,23 +63,36 @@ class quizController extends ControllerBase {
       $type = $node->getType();
       $status = $node->status->value;
       $response_array['Title'] = $node->getTitle();
+
       if (($type == 'leo_quiz') && ($status == 1)) {
         foreach ($node->get('field_quiz') as $key => $para) {
           $question = [];
           $answers = [];
+
           if ($para->entity->getType() == 'leo_quiz') {  
-            if ($key == $last_question) {
+
+            if ($key == $last_question) { //get question/answer/options for this step
               $quiz = $para->entity;   
               $question = $quiz->field_question->value;
               $answer = $quiz->field_answer->value;
+
               if ($user_choise != '') { // answer choise sent
+
                 if ($user_choise == $answer) {  // right answer, show great message and send next question if there is, or finish quiz
-                  $response_array['status'] = 'right';
-                  $response_array['message'] = 'you got it!!! now answer this:';                  
-                  $quiz_status[$nid]['question'] =  $last_question++;
+
+                  if ($last_question == $node->get('field_quiz').length) { // last question, congratulate the user
+                    $response_array['status'] = 'finish';
+                    $response_array['message'] = '<h3 class"quiz_congrats">contratulations you finish the test!!</h3>';
+                    $quiz_status[$nid]['question'] = 'over';
+                  } else {
+                    $response_array['status'] = 'right';
+                    $response_array['message'] = 'you got it!!! now answer this:';                  
+                    $quiz_status[$nid]['question'] = ++$last_question;                    
+                  }
+
                 } else { // wrong answer, show wrong message and send the same question
-                  $response_array['status'] = 'right';
-                  $response_array['message'] = 'you got it!!! now answer this:';
+                  $response_array['status'] = 'wrong';
+                  $response_array['message'] = 'Wrong answer, please try again:';
                   array_push($answers, $answer);
                   $options = $quiz->field_option->getValue();
                   for ($i = 0;$i < 3 ;$i++) {
@@ -89,9 +102,8 @@ class quizController extends ControllerBase {
                   shuffle($answers);
                   $response_array['question'] = $question;
                   $response_array['answers'] = $answers;
-
                 }
-              } else {
+              } else {  //first try to answer first question
                 array_push($answers, $answer);
                 $options = $quiz->field_option->getValue();
                 for ($i = 0;$i < 3 ;$i++) {
@@ -99,6 +111,8 @@ class quizController extends ControllerBase {
                   array_push($answers, $option[0]);
                 }
                 shuffle($answers);
+                $response_array['status'] = 'start';
+                $response_array['message'] = 'lets start the test by answer this:';
                 $response_array['question'] = $question;
                 $response_array['answers'] = $answers;
               }
@@ -107,17 +121,20 @@ class quizController extends ControllerBase {
            
           }
         }
-          $quiz_encoded = $this->serializer->serialize($response_array, 'json', ['plugin_id' => 'entity']);
+
+        $tempstore->set('leo_quiz_session', $quiz_status);
+        $quiz_encoded = $this->serializer->serialize($response_array, 'json', ['plugin_id' => 'entity']);
           
           // Build response with node serialized
-          $response = new JsonResponse([
+         $response = new JsonResponse([
             'quiz' => $response_array[$last_question],
-          //  'node' => $node_encoded,
+          //  'node' => $node_encoded, //we dont need to send the node
           ]);
-      } else {
+      } else { // nid is not a valid quiz, we return an empty json
       
       }
-    }  
+    }  // node is empty or not valid, we retunr an empty jsaon
+
       $response = new JsonResponse([
         'quiz' => $response_array,
       //  'node' => $node_encoded,

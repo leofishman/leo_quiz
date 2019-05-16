@@ -50,8 +50,9 @@ class quizController extends ControllerBase {
   public function quiz() {
     $response_array = [];
 
-    $nid =\Drupal::request()->query->get('quiz') ?: 'default';
-    
+    $nid = \Drupal::request()->query->get('quiz') ?: 'default';
+    $user_choise = \Drupal::request()->request->get('answer')?\Drupal::request()->request->get('answer'):'';
+
     is_numeric($nid)?$nid:0;
     $node = Node::load($nid);
     $title = $node->title->value;
@@ -71,15 +72,37 @@ class quizController extends ControllerBase {
               $quiz = $para->entity;   
               $question = $quiz->field_question->value;
               $answer = $quiz->field_answer->value;
-              array_push($answers, $answer);
-              $options = $quiz->field_option->getValue();
-              for ($i = 0;$i < 3 ;$i++) {
-                $option = array_values($options[$i]);
-                array_push($answers, $option[0]);
+              if ($user_choise != '') { // answer choise sent
+                if ($user_choise == $answer) {  // right answer, show great message and send next question if there is, or finish quiz
+                  $response_array['status'] = 'right';
+                  $response_array['message'] = 'you got it!!! now answer this:';                  
+                  $quiz_status[$nid]['question'] =  $last_question++;
+                } else { // wrong answer, show wrong message and send the same question
+                  $response_array['status'] = 'right';
+                  $response_array['message'] = 'you got it!!! now answer this:';
+                  array_push($answers, $answer);
+                  $options = $quiz->field_option->getValue();
+                  for ($i = 0;$i < 3 ;$i++) {
+                    $option = array_values($options[$i]);
+                    array_push($answers, $option[0]);
+                  }
+                  shuffle($answers);
+                  $response_array['question'] = $question;
+                  $response_array['answers'] = $answers;
+
+                }
+              } else {
+                array_push($answers, $answer);
+                $options = $quiz->field_option->getValue();
+                for ($i = 0;$i < 3 ;$i++) {
+                  $option = array_values($options[$i]);
+                  array_push($answers, $option[0]);
+                }
+                shuffle($answers);
+                $response_array['question'] = $question;
+                $response_array['answers'] = $answers;
               }
-              shuffle($answers);
-              $response_array['question'] = $question;
-              $response_array['answers'] = $answers;
+
             }
            
           }

@@ -67,11 +67,6 @@ class QuizBlock extends BlockBase {
     $build['quiz_block_quiz_to_show']['#attached']['library'] = array('leo_quiz/leo_quiz_load_block_quiz');
     $build['quiz_block_quiz_to_show']['#markup'] = '<p class="load_block_quiz"><span id="' . $this->configuration['quiz_to_show'] . '">
                                                     <div class="quiz_block"> 
-                                                      <div class="quiz_title"></div>
-                                                      <div class="quiz_question"></div>
-                                                      <div id="quiz_options">
-                                                          <input type="radio" class="quiz_option_radio" name="quiz_answer" /></input>
-                                                      </div>
                                                     </div></span></p>';
 
     return $build;

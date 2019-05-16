@@ -1,5 +1,8 @@
 leo_quiz_load_block_quiz:
   vesion: 1.x
+  css:
+    theme:
+      assets/css/block_quiz.css: {}    
   js:
     assets/js/load_block_quiz.js: {}
   dependencies:

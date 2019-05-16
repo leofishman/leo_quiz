@@ -1,0 +1,17 @@
+.quiz_title {
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+    margin: 5px;
+}
+
+.quiz_question {
+    margin-left: 15px;
+    font-size: large;
+    margin: 5px;
+}
+
+div#quiz_options {
+    margin-top: 10px;
+    padding: 10px;
+}

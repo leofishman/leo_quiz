@@ -12,6 +12,9 @@
         $('.quiz_block',context).click(function () {
          
           if (event.target.name == 'quiz_submit_button') {
+            $('.quiz_message').text('Checking your ansewer...');
+            $('.quiz_submit_button').attr("disabled", true);
+            $('.quiz_option_radio').attr("disabled", true);
             let option_choosen = $('input[name=quiz_answer]:checked').val();
             let nid  = $(".load_block_quiz").find("span").attr("id");
             let url = '/api/quiz?quiz=' + nid;

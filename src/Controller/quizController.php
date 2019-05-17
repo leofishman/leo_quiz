@@ -80,14 +80,19 @@ class quizController extends ControllerBase {
 
                 if ($user_choise == $answer) {  // right answer, show great message and send next question if there is, or finish quiz
 
-                  if ($last_question == $node->get('field_quiz').length) { // last question, congratulate the user
+                  if ($last_question == $node->get('field_quiz')->count()) { // last question, congratulate the user
                     $response_array['status'] = 'finish';
                     $response_array['message'] = '<h3 class"quiz_congrats">contratulations you finish the test!!</h3>';
                     $quiz_status[$nid]['question'] = 'over';
+
                   } else {
                     $response_array['status'] = 'right';
                     $response_array['message'] = 'you got it!!! now answer this:';                  
-                    $quiz_status[$nid]['question'] = ++$last_question;                    
+                    $quiz_status[$nid]['question'] = ++$last_question;   
+                    $response = new JsonResponse([
+                      'quiz' => $response_array,
+                    //  'node' => $node_encoded, //we dont need to send the node
+                    ]); return $response;                 
                   }
 
                 } else { // wrong answer, show wrong message and send the same question

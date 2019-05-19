@@ -34,7 +34,7 @@ class quizController extends ControllerBase {
     $uid = \Drupal::currentUser()->id();
 
     $userData = \Drupal::service('user.data');
-  //    $userData->set('leo_quiz', $uid, $nid, 0);
+  //    $userData->set('leo_quiz', $uid, $nid, 0);  //reset test by uncomment this
     $last_question = $userData->get('leo_quiz', $uid, $nid);
     $last_question = is_null($last_question)?0:$last_question;
 

@@ -1,39 +1,43 @@
 (function ($, Drupal) {
-    Drupal.behaviors.loadmore = {
+    Drupal.behaviors.checkanswer = {
       attach: function (context, settings) {
 
         $('.load_block_quiz', context).change(function () {
-          console.log(event.target.name, event.target.id, event.target);
-          console.log(event);
-          console.log(context);
           if (event.target.name == 'quiz_answer'){
-            $('.quiz_submit_button').attr("disabled", false);
+            event.path[2].getElementsByClassName('quiz_submit_button')[0].disabled = false;
           }
-
         });
 
-        $('.quiz_block',context).click(function () {
-         
+        $('.load_block_quiz',context).click(function () {
+          let answers = '';
+
           if (event.target.name == 'quiz_submit_button') {
-            $('.quiz_message').text('Checking your ansewer...');
-            $('.quiz_submit_button').attr("disabled", true);
-            $('.quiz_option_radio').attr("disabled", true);
+            let nid  = event.target.id;
             let option_choosen = $('input[name=quiz_answer]:checked').val();
-            let nid  = $(".load_block_quiz").find("span").attr("id");
+
             let url = '/api/quiz?quiz=' + nid;
+            $(event.path[2]).empty();
+         //   $('<div class="quiz_message">Checking your ansewer...</div>').appendTo('div.nid div#' + nid); //.getElementsByClassName('.quiz_message')).empty(); //[0].html('<div class="checking answer">Checking your ansewer...</div>');
+        //    $('.quiz_submit_button').attr("disabled", true);
+        //    $('.quiz_option_radio').attr("disabled", true);
+
             
             $.post(url, {answer: option_choosen}, function (data, status) {
-             // console.log('session', data.quiz.session, 'lastquestion', data.quiz.lastquestion, 'last_q_from_session', data.quiz.lastquestionfromsession);
               if (status == "success") {
-                $('.quiz_block').empty();
-                $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
-                $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
-                $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
-      
-                for (i = 0; i < 4; i++) {
-                  $('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
+                $(event.path[2]).empty();
+                $('<div class="quiz_message"><div class="' + data.quiz.status +'">' + data.quiz.message + '</div></div>').appendTo('div.nid div#' + nid);
+
+                $('<div class="quiz_title">' + data.quiz.Title + '</div>').appendTo('div.nid div#' + nid);
+
+                if (data.quiz.question.length != 0 && data.quiz.answers.length != 0) {
+                  answers = '';
+                  for (i = 0; i < 4; i++) {
+                    answers += '<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i] + '"/>  ' + data.quiz.answers[i] + '</input><br />'
+                    // $(leo_quiz_blocks).append('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
+                  }
+                  $('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options">' + answers + '</div>').appendTo('div.nid div#' + nid);
+                  $('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button"  id="' + nid + '">send</button></div>').appendTo('div.nid div#' + nid);
                 }
-                $('.quiz_block').append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
               }
 
             });
@@ -54,23 +58,26 @@
 
         $.get(url, [], function (data, status) {
           if (status == "success") {
-            let block_id = '#quiz_block' + nid;
+            //let block_class = 'quiz_block_' + nid;
             $(leo_quiz_blocks).empty();
+            $(leo_quiz_blocks).append('<div class="nid"><div id="' + nid + '"></span></div>');
+
 
             if (data.quiz.status && data.quiz.message) {
-              $(leo_quiz_blocks).append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
+              $('<div class="quiz_message"><div class="' + data.quiz.status +'">' + data.quiz.message + '</div></div>').appendTo('div.nid div#'+nid);
+              //$(leo_quiz_blocks).append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
             }
             if (data.quiz.Title) {
-              $(leo_quiz_blocks, block_id).append('<div class="quiz_title">' + data.quiz.Title + '</div>');
+              $('<div class="quiz_title">' + data.quiz.Title + '</div>').appendTo('div.nid div#'+nid);
+              //$(leo_quiz_blocks).append('<div class="quiz_title">' + data.quiz.Title + '</div>');
             }
             if (data.quiz.question && data.quiz.answers) {
               answers = '';
               for (i = 0; i < 4; i++) {
                 answers += '<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />'
-               // $(leo_quiz_blocks).append('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
               }
-              $(leo_quiz_blocks, block_id).append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options">' + answers + '</div>');
-              $(leo_quiz_blocks).append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
+              $('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options">' + answers + '</div>').appendTo('div.nid div#'+nid);
+              $('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button"  id="' + nid + '">send</button></div>').appendTo('div.nid div#'+nid);
             }
           }
         });

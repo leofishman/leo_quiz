@@ -21,7 +21,7 @@
             
             $.post(url, {answer: option_choosen}, function (data, status) {
              // console.log('session', data.quiz.session, 'lastquestion', data.quiz.lastquestion, 'last_q_from_session', data.quiz.lastquestionfromsession);
-              if (data) {
+              if (status == "success") {
                 $('.quiz_block').empty();
                 $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
                 $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
@@ -50,18 +50,27 @@
         let url = '/api/quiz?quiz=' + nid;
 
         $.get(url, [], function (data, status) {
-          $('.quiz_block').empty();//console.log(data, data.quiz, data.quiz.status, data.quiz.message);
-          $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
-          $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
-          $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
+          if (status == "success") {
+            $('.quiz_block').empty();
+            if (data.quiz.status && data.quiz.message) {
+              $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
+            }
+            if (data.quiz.Title) {
+              $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
+            }
+            if (data.quiz.question) {
+              $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
 
-          for (i = 0; i < 4; i++) {
-            $('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
+            }
+            if (data.quiz.answers) {
+              for (i = 0; i < 4; i++) {
+                $('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
+              }
+              $('.quiz_block').append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
+
+            }
+
           }
-          $('.quiz_block').append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
-
-          console.log('session', data.quiz.session, 'lastquestion', data.quiz.lastquestion, 'last_q_from_session', data.quiz.lastquestionfromsession);
-
         });
 
         return url;

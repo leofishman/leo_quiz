@@ -36,10 +36,8 @@ class quizController extends ControllerBase {
     $userData = \Drupal::service('user.data');
 
     $last_question = $userData->get('leo_quiz', $uid, $nid);
-
-
     $last_question = is_null($last_question)?0:$last_question;
-    $array_response['lastquestionfromsession'] = $last_question;
+
 	if(($node->getType() == 'leo_quiz') && ($node->status->value == 1)) {
 	  if ($last_question < $node->get('field_quiz')->count()) {
 	  // first question, first try
@@ -68,24 +66,29 @@ class quizController extends ControllerBase {
 			}
 		} 
 		// fill array_response with question and answers
-		  $question = $node->get('field_quiz')[$last_question]->entity->field_question->value;
-		  $answer = $node->get('field_quiz')[$last_question]->entity->field_answer->value;
-		  array_push($answers, $answer);
-		  $options = $node->get('field_quiz')[$last_question]->entity->field_option->getValue();
-		  for ($i = 0;$i < 3 ;$i++) {
-			$option = array_values($options[$i]);
-			array_push($answers, $option[0]);
-		  }
-		  shuffle($answers);
-		  $response_array['question'] = $question;
-		  $response_array['answers'] = $answers;
+          if ($last_question == $node->get('field_quiz')->count()) {
+              $response_array['question'] = [];
+              $response_array['answers'] = [];
+          } else {
+              $question = $node->get('field_quiz')[$last_question]->entity->field_question->value;
+              $answer = $node->get('field_quiz')[$last_question]->entity->field_answer->value;
+              array_push($answers, $answer);
+              $options = $node->get('field_quiz')[$last_question]->entity->field_option->getValue();
+              for ($i = 0;$i < 3 ;$i++) {
+                  $option = array_values($options[$i]);
+                  array_push($answers, $option[0]);
+              }
+              shuffle($answers);
+              $response_array['question'] = $question;
+              $response_array['answers'] = $answers;
+          }
+
           $userData->set('leo_quiz', $uid, $nid, $last_question);
 
-          $response_array['lastquestion'] = $last_question;
-          $response_array['session'] = $userData->get('leo_quiz', $uid, $nid);
+
 	  } else { // last_question greater than total question for that quiz
-		  
-	  }
+          $response_array['status'] = 'finish';
+          $response_array['message'] = '<h3 class"quiz_congrats">contratulations you finish the test!!</h3>';	  }
 	}
 
 	  // Build response with node serialized

@@ -35,7 +35,7 @@ class QuizBlock extends BlockBase {
     $query->condition('type', 'leo_quiz')
     ->addTag('distinct');
     $nids = $query->execute();
-    $nodes = node_load_multiple($nids);
+    $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
     foreach ($nodes as $nid => $node){
       $options[$nid] = $node->getTitle();
     }

@@ -2,7 +2,10 @@
     Drupal.behaviors.loadmore = {
       attach: function (context, settings) {
 
-        $('.quiz_block', context).change(function () {
+        $('.load_block_quiz', context).change(function () {
+          console.log(event.target.name, event.target.id, event.target);
+          console.log(event);
+          console.log(context);
           if (event.target.name == 'quiz_answer'){
             $('.quiz_submit_button').attr("disabled", false);
           }
@@ -46,38 +49,42 @@
 
 (function ($, drupalSettings) {
     $(document).ready(function () {
-      function loadQuiz(nid) {
+      function loadQuiz(leo_quiz_blocks, nid) {
         let url = '/api/quiz?quiz=' + nid;
 
         $.get(url, [], function (data, status) {
           if (status == "success") {
-            $('.quiz_block').empty();
+            let block_id = '#quiz_block' + nid;
+            $(leo_quiz_blocks).empty();
+
             if (data.quiz.status && data.quiz.message) {
-              $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
+              $(leo_quiz_blocks).append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
             }
             if (data.quiz.Title) {
-              $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
+              $(leo_quiz_blocks, block_id).append('<div class="quiz_title">' + data.quiz.Title + '</div>');
             }
-            if (data.quiz.question) {
-              $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
-
-            }
-            if (data.quiz.answers) {
+            if (data.quiz.question && data.quiz.answers) {
+              answers = '';
               for (i = 0; i < 4; i++) {
-                $('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
+                answers += '<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />'
+               // $(leo_quiz_blocks).append('<input type="radio" class="quiz_option_radio" name="quiz_answer" value="' + data.quiz.answers[i]  + '"/>  ' + data.quiz.answers[i] + '</input><br />').appendTo('#quiz_options');
               }
-              $('.quiz_block').append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
-
+              $(leo_quiz_blocks, block_id).append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options">' + answers + '</div>');
+              $(leo_quiz_blocks).append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
             }
-
           }
         });
 
         return url;
       }
-      let nid  = $(".load_block_quiz").find("span").attr("id");
-      loadQuiz(nid);
-      
+      let nid = 0;
+      let answers = '';
+      let leo_quiz_blocks = $(".load_block_quiz");
+      leo_quiz_blocks.each( function () {
+        nid  = $(this).find("span").attr("id");
+        loadQuiz($(this),nid);
+        }
+      )
     });
 
   })(jQuery, drupalSettings);

@@ -65,8 +65,8 @@ class QuizBlock extends BlockBase {
     //TODO atach javascript behavior to get the quiz api and draw the questions and submit button
    $build = [];
     $build['quiz_block_quiz_to_show']['#attached']['library'] = array('leo_quiz/leo_quiz_load_block_quiz');
-    $build['quiz_block_quiz_to_show']['#markup'] = '<p class="load_block_quiz"><span id="' . $this->configuration['quiz_to_show'] . '">
-                                                    <div class="quiz_block"> 
+    $build['quiz_block_quiz_to_show']['#markup'] = '<p class="load_block_quiz" ><span id="' . $this->configuration['quiz_to_show'] . '">
+                                                    <div class="quiz_block" id="quiz_block_' . $this->configuration['quiz_to_show'] . '"> 
                                                     </div></span></p>';
 
     return $build;

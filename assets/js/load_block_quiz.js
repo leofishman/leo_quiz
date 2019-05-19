@@ -20,7 +20,7 @@
             let url = '/api/quiz?quiz=' + nid;
             
             $.post(url, {answer: option_choosen}, function (data, status) {
-              console.log(data);
+             // console.log('session', data.quiz.session, 'lastquestion', data.quiz.lastquestion, 'last_q_from_session', data.quiz.lastquestionfromsession);
               if (data) {
                 $('.quiz_block').empty();
                 $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
@@ -35,7 +35,7 @@
 
             });
 
-            console.log(option_choosen);
+         //   console.log(option_choosen);
           }
         });
     }
@@ -50,7 +50,7 @@
         let url = '/api/quiz?quiz=' + nid;
 
         $.get(url, [], function (data, status) {
-          $('.quiz_block').empty();console.log(data, data.quiz, data.quiz.status, data.quiz.message);
+          $('.quiz_block').empty();//console.log(data, data.quiz, data.quiz.status, data.quiz.message);
           $('.quiz_block').append('<div class="quiz_message ' + data.quiz.status +'">' + data.quiz.message + '</div>');
           $('.quiz_block').append('<div class="quiz_title">' + data.quiz.Title + '</div>');
           $('.quiz_block').append('<div class="quiz_question">' + data.quiz.question + '?</div><div id="quiz_options"></div>');
@@ -60,6 +60,7 @@
           }
           $('.quiz_block').append('<div class="quiz_submit"><button type="button" name="quiz_submit_button" disabled="true" class="quiz_submit_button">send</button></div>');
 
+          console.log('session', data.quiz.session, 'lastquestion', data.quiz.lastquestion, 'last_q_from_session', data.quiz.lastquestionfromsession);
 
         });
 

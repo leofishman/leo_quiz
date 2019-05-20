@@ -4,6 +4,8 @@ namespace Drupal\leo_quiz\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides a 'QuizBlock' block.
@@ -71,5 +73,12 @@ class QuizBlock extends BlockBase {
 
     return $build;
   }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function blockAccess(AccountInterface $account) {
+        return AccessResult::allowedIfHasPermission($account, 'view quiz');
+    }
 
 }

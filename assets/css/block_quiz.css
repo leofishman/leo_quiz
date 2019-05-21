@@ -15,3 +15,25 @@ div#quiz_options {
     margin-top: 10px;
     padding: 10px;
 }
+
+.quiz_message .wrong {
+    color: red;
+}
+
+.quiz_message .right {
+    color: green;
+    font-weight: bold;
+}
+
+.quiz_message .finish {
+    color: blue;
+    font-weight: bolder;
+    animation:blinkingText 1.5s infinite;
+}
+@keyframes blinkingText{
+    0%{     color: #000;    }
+    49%{    color: transparent; }
+    50%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #000;    }
+}
